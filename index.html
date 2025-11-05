@@ -1,324 +1,286 @@
 <!DOCTYPE html>
 <html lang="es">
->
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Simulacro ICFES — By Mitch</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <style>
-    :root {
-      --color-bg: #f7f9fb;
-      --color-card: #ffffff;
-      --color-primary: #2563eb;
-      --color-secondary: #0ea5e9;
-      --color-muted: #6b7280;
-      --radius: 12px;
-    }
-    * { box-sizing: border-box; }
-    body {
-      font-family: 'Inter', sans-serif;
-      margin: 0;
-      background: linear-gradient(180deg, #e0f2fe, #f7f9fb);
-      color: #1e293b;
-    }
-    header {
-      background: var(--color-primary);
-      color: white;
-      padding: 14px 24px;
-      text-align: center;
-      font-weight: 700;
-      letter-spacing: 0.5px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    }
-    main {
-      max-width: 900px;
-      margin: 20px auto;
-      background: var(--color-card);
-      border-radius: var(--radius);
-      padding: 28px;
-      box-shadow: 0 6px 18px rgba(0,0,0,0.05);
-    }
-    .hidden { display: none; }
-    .btn {
-      background: var(--color-primary);
-      color: white;
-      border: none;
-      padding: 10px 18px;
-      border-radius: var(--radius);
-      cursor: pointer;
-      font-weight: 600;
-    }
-    .btn:hover {
-      background: var(--color-secondary);
-    }
-    .question {
-      margin-bottom: 16px;
-      background: #f9fafb;
-      padding: 14px;
-      border-radius: var(--radius);
-      border-left: 4px solid var(--color-primary);
-    }
-    .question h4 { margin: 0 0 8px; }
-    label { display: block; margin: 4px 0; }
-    #timer {
-      background: #e0f2fe;
-      padding: 8px 14px;
-      border-radius: 8px;
-      font-weight: 600;
-      color: var(--color-primary);
-      float: right;
-    }
-    #results {
-      text-align: center;
-    }
-    .incorrect { color: red; }
-    .correct { color: green; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simulacro ICFES Michelle Flórez</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --primary: #2563eb;
+    --secondary: #60a5fa;
+    --bg: #f0f6ff;
+    --card: #ffffff;
+    --text: #1e293b;
+    --muted: #64748b;
+    --success: #16a34a;
+    --error: #dc2626;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; }
+  body {
+    background: linear-gradient(180deg, var(--bg) 0%, #fff 100%);
+    color: var(--text);
+    min-height: 100vh;
+  }
+  header {
+    background: var(--primary);
+    color: #fff;
+    padding: 1rem 2rem;
+    text-align: center;
+    font-weight: 700;
+    font-size: 1.4rem;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  }
+  .container {
+    max-width: 800px;
+    margin: 2rem auto;
+    background: var(--card);
+    border-radius: 14px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.05);
+    padding: 2rem;
+  }
+  .center { text-align: center; }
+  button {
+    background: var(--primary);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 0.7rem 1.4rem;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 1rem;
+  }
+  button:hover { background: var(--secondary); }
+  .hidden { display: none; }
+  .question { margin-bottom: 1.2rem; }
+  .question h3 { font-size: 1rem; margin-bottom: 0.5rem; }
+  .options label { display: block; margin-bottom: 0.3rem; cursor: pointer; }
+  .timer {
+    background: #e0edff;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    display: inline-block;
+    font-weight: 600;
+    margin-top: 0.5rem;
+  }
+  .area-title {
+    text-align: center;
+    color: var(--primary);
+    font-size: 1.4rem;
+    margin-bottom: 1rem;
+  }
+  .result {
+    margin-top: 2rem;
+    padding: 1rem;
+    background: #f8fafc;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+  }
+  .success { color: var(--success); }
+  .error { color: var(--error); }
+</style>
 </head>
-
 <body>
-  <header>
-    Simulacro ICFES — By Mitch
-    <span id="timer" class="hidden">45:00</span>
-  </header>
 
-  <main>
-    <!-- INICIO -->
-    <section id="inicio">
-      <h2>Bienvenido/a al Simulacro ICFES</h2>
-      <p>Escribe tu nombre para comenzar. Tienes <strong>45 minutos</strong> en total.</p>
-      <input type="text" id="nombre" placeholder="Tu nombre" style="padding:8px;border-radius:8px;width:60%;margin-bottom:12px;">
-      <br>
-      <button class="btn" onclick="iniciarSimulacro()">Iniciar Simulacro</button>
-    </section>
+<header>Simulacro ICFES — Michelle Flórez</header>
 
-    <!-- ÁREAS -->
-    <section id="area" class="hidden">
-      <h2 id="tituloArea">Matemáticas</h2>
-      <div id="preguntas"></div>
-      <button class="btn" id="btnSiguiente" onclick="siguienteArea()">Siguiente área</button>
-    </section>
+<div class="container" id="inicio">
+  <div class="center">
+    <h2>Bienvenido al Simulacro ICFES</h2>
+    <p>Ingresa tu nombre para comenzar:</p>
+    <input type="text" id="nombre" placeholder="Tu nombre" style="padding:0.5rem;border-radius:8px;border:1px solid #ccc;margin-top:10px;width:80%;max-width:300px;"><br>
+    <button onclick="iniciarSimulacro()">Iniciar Simulacro</button>
+  </div>
+</div>
 
-    <!-- RESULTADOS -->
-    <section id="resultados" class="hidden">
-      <h2>Resultados finales</h2>
-      <div id="resumen"></div>
-      <button class="btn" onclick="exportarPDF()">Exportar tus resultados en PDF</button>
-    </section>
-  </main>
+<div class="container hidden" id="simulacro">
+  <div class="center">
+    <h2 id="area-title" class="area-title"></h2>
+    <div class="timer" id="timer">45:00</div>
+  </div>
+  <form id="formulario"></form>
+  <div class="center">
+    <button id="next-btn" onclick="siguienteArea()">Siguiente Área</button>
+  </div>
+</div>
 
-  <script>
-    const { jsPDF } = window.jspdf;
+<div class="container hidden" id="resultados">
+  <div class="center">
+    <h2>Resultados del Simulacro</h2>
+    <div id="resumen"></div>
+    <button onclick="exportarPDF()">Descargar Resultados (PDF)</button>
+  </div>
+</div>
 
-    const areas = [
-      { nombre: "Matemáticas" },
-      { nombre: "Sociales" },
-      { nombre: "Lectura Crítica" },
-      { nombre: "Ciencias Naturales" },
-      { nombre: "Inglés" }
-    ];
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+const { jsPDF } = window.jspdf;
 
-    let indiceArea = 0;
-    let respuestas = {};
-    let tiempo = 45 * 60;
-    let temporizador;
-    let nombreUsuario = "";
+let tiempo = 45 * 60; // 45 minutos
+let intervalo;
+let nombreEstudiante = "";
+let areaActual = 0;
+const areas = ["Matemáticas", "Sociales", "Lectura Crítica", "Ciencias Naturales", "Inglés"];
+const resultados = {};
 
-    const preguntasPorArea = {
-      "Matemáticas": [
-        { q: "¿Cuánto es 5 + 3?", a: ["6","7","8","9"], c: 2 },
-        { q: "¿Cuál es la raíz cuadrada de 49?", a: ["6","7","8","9"], c: 1 },
-        { q: "¿Cuánto es 12 x 8?", a: ["96","88","102","108"], c: 0 },
-        { q: "¿Cuánto es 25% de 200?", a: ["25","40","50","60"], c: 2 },
-        { q: "¿Cuál es el número primo?", a: ["9","12","15","17"], c: 3 },
-        { q: "¿Cuánto es 10²?", a: ["10","20","100","200"], c: 2 },
-        { q: "¿Cuánto es 2³?", a: ["6","8","9","12"], c: 1 },
-        { q: "¿Cuánto es 100/4?", a: ["20","25","30","40"], c: 1 },
-        { q: "¿Cuánto es 9x9?", a: ["81","72","90","99"], c: 0 },
-        { q: "¿Cuál es el doble de 25?", a: ["40","45","50","55"], c: 2 }
-      ],
-      "Sociales": [
-        { q: "¿Quién fue Simón Bolívar?", a: ["Poeta","Libertador","Presidente de EE.UU","Explorador"], c: 1 },
-        { q: "¿Dónde se firmó la independencia de Colombia?", a: ["Cartagena","Bogotá","Tunja","Santa Fe"], c: 3 },
-        { q: "¿En qué año fue la independencia de Colombia?", a: ["1810","1820","1819","1830"], c: 2 },
-        { q: "¿Qué tipo de gobierno tiene Colombia?", a: ["Monarquía","Dictadura","República","Imperio"], c: 2 },
-        { q: "¿Cuál es la capital del Atlántico?", a: ["Cali","Barranquilla","Medellín","Bogotá"], c: 1 },
-        { q: "¿Qué es una constitución?", a: ["Una ley suprema","Un impuesto","Un presidente","Un decreto"], c: 0 },
-        { q: "¿Cuál es la moneda de Colombia?", a: ["Euro","Peso","Dólar","Real"], c: 1 },
-        { q: "¿Quién fue Jorge Eliécer Gaitán?", a: ["Político","Actor","Deportista","Cantante"], c: 0 },
-        { q: "¿Qué evento marcó el Bogotazo?", a: ["Su asesinato","La independencia","La creación de Bogotá","La guerra civil"], c: 0 },
-        { q: "¿Qué continente está Colombia?", a: ["Europa","América","Asia","África"], c: 1 }
-      ],
-      "Lectura Crítica": [
-        { q: "El sinónimo de 'feliz' es:", a: ["Triste","Contento","Molesto","Serio"], c: 1 },
-        { q: "El antónimo de 'valiente' es:", a: ["Cobarde","Fuerte","Audaz","Atrevido"], c: 0 },
-        { q: "¿Qué significa 'persuadir'?", a: ["Convencer","Obligar","Ignorar","Mentir"], c: 0 },
-        { q: "¿Qué es una metáfora?", a: ["Figura literaria","Frase común","Refrán","Proverbio"], c: 0 },
-        { q: "¿Qué expresa un texto narrativo?", a: ["Datos","Opiniones","Relatos","Mandatos"], c: 2 },
-        { q: "El texto argumentativo busca:", a: ["Convencer","Describir","Narrar","Ordenar"], c: 0 },
-        { q: "Un sinónimo de 'hermoso' es:", a: ["Feo","Bonito","Raro","Oscuro"], c: 1 },
-        { q: "Un antónimo de 'rápido' es:", a: ["Ligero","Lento","Veloz","Ágil"], c: 1 },
-        { q: "El texto expositivo busca:", a: ["Explicar","Narrar","Persuadir","Emocionar"], c: 0 },
-        { q: "El narrador en primera persona usa:", a: ["Él","Ella","Yo","Nosotros"], c: 2 }
-      ],
-      "Ciencias Naturales": [
-        { q: "El agua se congela a:", a: ["0°C","10°C","32°C","-10°C"], c: 0 },
-        { q: "El sol es una:", a: ["Estrella","Planeta","Luna","Galaxia"], c: 0 },
-        { q: "Los pulmones pertenecen al sistema:", a: ["Digestivo","Respiratorio","Circulatorio","Nervioso"], c: 1 },
-        { q: "El ADN contiene:", a: ["Azúcar","Información genética","Proteínas","Sales"], c: 1 },
-        { q: "La Tierra gira alrededor del:", a: ["Sol","Luna","Marte","Venus"], c: 0 },
-        { q: "El órgano que bombea sangre es:", a: ["Pulmón","Cerebro","Corazón","Hígado"], c: 2 },
-        { q: "¿Cuál es un gas del aire?", a: ["Oxígeno","Agua","Hierro","Carbono"], c: 0 },
-        { q: "El cuerpo humano tiene:", a: ["206 huesos","100 huesos","300 huesos","250 huesos"], c: 0 },
-        { q: "El agua en ebullición está a:", a: ["50°C","100°C","150°C","200°C"], c: 1 },
-        { q: "El planeta más cercano al Sol es:", a: ["Venus","Marte","Mercurio","Tierra"], c: 2 }
-      ],
-      "Inglés": [
-        { q: "Translate: 'Dog'", a: ["Perro","Gato","Pájaro","Pez"], c: 0 },
-        { q: "Translate: 'House'", a: ["Casa","Puerta","Ventana","Calle"], c: 0 },
-        { q: "The plural of 'Child' is:", a: ["Childs","Children","Childes","Child"], c: 1 },
-        { q: "'Book' means:", a: ["Mesa","Libro","Bolígrafo","Lápiz"], c: 1 },
-        { q: "Opposite of 'Hot':", a: ["Warm","Cold","Cool","Freeze"], c: 1 },
-        { q: "Translate: 'Sun'", a: ["Sol","Luna","Estrella","Cielo"], c: 0 },
-        { q: "'Teacher' means:", a: ["Estudiante","Profesor","Doctor","Amigo"], c: 1 },
-        { q: "Translate: 'Car'", a: ["Avión","Tren","Carro","Barco"], c: 2 },
-        { q: "Opposite of 'Happy':", a: ["Sad","Glad","Nice","Smile"], c: 0 },
-        { q: "Translate: 'Water'", a: ["Fuego","Aire","Tierra","Agua"], c: 3 }
-      ]
-    };
+const preguntas = {
+  "Matemáticas": [
+    { p: "¿Cuánto es 25 × 4?", o: ["50","100","75","125"], r: "100" },
+    { p: "¿Cuál es la raíz cuadrada de 81?", o: ["9","8","7","6"], r: "9" },
+    { p: "Si un triángulo tiene lados 3, 4 y 5, ¿qué tipo es?", o: ["Equilátero","Isósceles","Escaleno","Rectángulo"], r: "Rectángulo" },
+    { p: "¿Cuánto es 15% de 200?", o: ["25","30","35","40"], r: "30" },
+    { p: "¿Cuál es el valor de π (pi) aproximado?", o: ["3.14","3.04","3.24","3.00"], r: "3.14" },
+    { p: "¿Cuánto es 12²?", o: ["124","122","144","164"], r: "144" },
+    { p: "¿Cuánto es 7×8?", o: ["54","56","58","64"], r: "56" },
+    { p: "¿Qué es 1/4 en porcentaje?", o: ["10%","25%","40%","50%"], r: "25%" },
+    { p: "¿Cuál es el doble de 64?", o: ["124","126","128","130"], r: "128" },
+    { p: "¿Cuánto es 5³?", o: ["25","125","75","150"], r: "125" }
+  ],
+  "Sociales": [
+    { p: "¿En qué año se firmó la independencia de Colombia?", o: ["1810","1819","1821","1830"], r: "1810" },
+    { p: "¿Quién fue Simón Bolívar?", o: ["Pintor","Libertador","Rey","Presidente actual"], r: "Libertador" },
+    { p: "¿Cuál es la capital de Francia?", o: ["París","Madrid","Roma","Berlín"], r: "París" },
+    { p: "¿Qué representa la bandera de Colombia?", o: ["Ríos, montañas y mar","Riqueza, sangre y cielo","Sol, luna y tierra","Nada"], r: "Riqueza, sangre y cielo" },
+    { p: "¿Qué sistema político predomina en Colombia?", o: ["Monarquía","Dictadura","República democrática","Imperio"], r: "República democrática" },
+    { p: "¿Qué océano baña la costa occidental de Colombia?", o: ["Atlántico","Pacífico","Índico","Ninguno"], r: "Pacífico" },
+    { p: "¿Cuál es la principal fuente de derecho?", o: ["La ley","La costumbre","El juez","El presidente"], r: "La ley" },
+    { p: "¿Qué país limita al sur con Colombia?", o: ["Panamá","Ecuador","Brasil","Perú"], r: "Ecuador" },
+    { p: "¿En qué continente está Colombia?", o: ["Asia","África","América","Europa"], r: "América" },
+    { p: "¿Cuál es la moneda de Colombia?", o: ["Peso colombiano","Dólar","Euro","Sol"], r: "Peso colombiano" }
+  ],
+  "Lectura Crítica": [
+    { p: "¿Qué es una idea principal?", o: ["La más repetida","La que resume el texto","La primera oración","Una cita"], r: "La que resume el texto" },
+    { p: "¿Qué es un sinónimo?", o: ["Palabra igual","Palabra contraria","Palabra parecida","Palabra inventada"], r: "Palabra parecida" },
+    { p: "¿Qué es inferir?", o: ["Adivinar","Comprender literalmente","Deduce información implícita","Repetir"], r: "Deduce información implícita" },
+    { p: "¿Qué es un texto narrativo?", o: ["Describe hechos","Explica conceptos","Cuenta una historia","Da instrucciones"], r: "Cuenta una historia" },
+    { p: "¿Qué indica un punto final?", o: ["Pausa breve","Cambio de tema","Fin del texto","Ninguna"], r: "Fin del texto" },
+    { p: "¿Qué es el autor?", o: ["El que lee","El que escribe","El personaje","El crítico"], r: "El que escribe" },
+    { p: "¿Qué es un argumento?", o: ["Una historia","Una opinión con razones","Un ejemplo","Una cita"], r: "Una opinión con razones" },
+    { p: "¿Qué son los conectores?", o: ["Palabras de unión","Nombres propios","Sustantivos","Adjetivos"], r: "Palabras de unión" },
+    { p: "¿Qué expresa un texto expositivo?", o: ["Hechos reales","Opiniones","Emociones","Ficción"], r: "Hechos reales" },
+    { p: "¿Qué hace un título?", o: ["Resume el tema","Es adorno","Confunde","Nada"], r: "Resume el tema" }
+  ],
+  "Ciencias Naturales": [
+    { p: "¿Cuál es el órgano principal del sistema circulatorio?", o: ["Cerebro","Pulmones","Corazón","Riñones"], r: "Corazón" },
+    { p: "¿Qué gas respiramos?", o: ["CO2","Nitrógeno","Oxígeno","Hidrógeno"], r: "Oxígeno" },
+    { p: "¿Cuál es el planeta más grande?", o: ["Tierra","Marte","Júpiter","Venus"], r: "Júpiter" },
+    { p: "¿Qué necesita una planta para hacer fotosíntesis?", o: ["Sol y agua","Aire y fuego","Frío y calor","Nada"], r: "Sol y agua" },
+    { p: "¿Cuál es el estado líquido del agua?", o: ["Hielo","Vapor","Agua","Nieve"], r: "Agua" },
+    { p: "¿Qué parte del cuerpo bombea sangre?", o: ["Pulmones","Corazón","Cerebro","Hígado"], r: "Corazón" },
+    { p: "¿Qué fuerza nos mantiene en el suelo?", o: ["Viento","Magnetismo","Gravedad","Energía"], r: "Gravedad" },
+    { p: "¿Qué órgano filtra la sangre?", o: ["Hígado","Corazón","Riñón","Estómago"], r: "Riñón" },
+    { p: "¿Qué estrella ilumina la Tierra?", o: ["Luna","Marte","Sol","Júpiter"], r: "Sol" },
+    { p: "¿Cuál es el metal líquido a temperatura ambiente?", o: ["Hierro","Mercurio","Oro","Plata"], r: "Mercurio" }
+  ],
+  "Inglés": [
+    { p: "What color is the sky?", o: ["Blue","Red","Green","Black"], r: "Blue" },
+    { p: "Translate: 'Dog'", o: ["Gato","Perro","Pez","Rana"], r: "Perro" },
+    { p: "What is the plural of 'child'?", o: ["Childs","Childes","Children","Chields"], r: "Children" },
+    { p: "Complete: I ___ a student.", o: ["am","is","are","be"], r: "am" },
+    { p: "Opposite of 'hot'", o: ["Cold","Warm","Cool","Dry"], r: "Cold" },
+    { p: "Synonym of 'happy'", o: ["Sad","Angry","Glad","Tired"], r: "Glad" },
+    { p: "Translate: 'House'", o: ["Casa","Perro","Carro","Escuela"], r: "Casa" },
+    { p: "Verb 'to eat' in past is:", o: ["Eating","Eat","Ate","Eaten"], r: "Ate" },
+    { p: "Translate: 'School'", o: ["Escuela","Casa","Trabajo","Libro"], r: "Escuela" },
+    { p: "Opposite of 'big'", o: ["Large","Huge","Small","Tall"], r: "Small" }
+  ]
+};
 
-    function iniciarSimulacro() {
-      nombreUsuario = document.getElementById("nombre").value.trim();
-      if (!nombreUsuario) return alert("Por favor escribe tu nombre.");
+function iniciarSimulacro() {
+  nombreEstudiante = document.getElementById("nombre").value.trim();
+  if (!nombreEstudiante) return alert("Por favor ingresa tu nombre");
+  document.getElementById("inicio").classList.add("hidden");
+  document.getElementById("simulacro").classList.remove("hidden");
+  iniciarTemporizador();
+  mostrarArea();
+}
 
-      document.getElementById("inicio").classList.add("hidden");
-      document.getElementById("area").classList.remove("hidden");
-      document.getElementById("timer").classList.remove("hidden");
-
-      iniciarTemporizador();
-      mostrarPreguntas();
+function iniciarTemporizador() {
+  const timer = document.getElementById("timer");
+  intervalo = setInterval(() => {
+    const min = Math.floor(tiempo / 60);
+    const seg = tiempo % 60;
+    timer.textContent = `${min}:${seg.toString().padStart(2,"0")}`;
+    tiempo--;
+    if (tiempo < 0) {
+      clearInterval(intervalo);
+      finalizarSimulacro();
     }
+  }, 1000);
+}
 
-    function iniciarTemporizador() {
-      const timerElement = document.getElementById("timer");
-      temporizador = setInterval(() => {
-        const min = Math.floor(tiempo / 60);
-        const seg = tiempo % 60;
-        timerElement.textContent = `${String(min).padStart(2,"0")}:${String(seg).padStart(2,"0")}`;
-        if (tiempo <= 0) {
-          clearInterval(temporizador);
-          finalizarSimulacro();
-        }
-        tiempo--;
-      }, 1000);
-    }
+function mostrarArea() {
+  const area = areas[areaActual];
+  document.getElementById("area-title").textContent = area;
+  const form = document.getElementById("formulario");
+  form.innerHTML = "";
+  preguntas[area].forEach((q, i) => {
+    const div = document.createElement("div");
+    div.classList.add("question");
+    div.innerHTML = `<h3>${i+1}. ${q.p}</h3>` + 
+      q.o.map(op => `<label><input type="radio" name="q${i}" value="${op}"> ${op}</label>`).join("");
+    form.appendChild(div);
+  });
+}
 
-    function mostrarPreguntas() {
-      const areaActual = areas[indiceArea].nombre;
-      document.getElementById("tituloArea").textContent = areaActual;
-      const contenedor = document.getElementById("preguntas");
-      contenedor.innerHTML = "";
+function siguienteArea() {
+  const area = areas[areaActual];
+  const form = document.getElementById("formulario");
+  const respuestas = form.querySelectorAll("input[type=radio]:checked");
+  let correctas = 0;
+  respuestas.forEach((res, i) => {
+    if (res.value === preguntas[area][i].r) correctas++;
+  });
+  resultados[area] = correctas;
+  areaActual++;
+  if (areaActual < areas.length) mostrarArea();
+  else finalizarSimulacro();
+}
 
-      preguntasPorArea[areaActual].forEach((p, i) => {
-        const div = document.createElement("div");
-        div.className = "question";
-        div.innerHTML = `<h4>${i + 1}. ${p.q}</h4>` +
-          p.a.map((op, j) => `
-            <label>
-              <input type="radio" name="preg${i}" value="${j}">
-              ${op}
-            </label>`).join("");
-        contenedor.appendChild(div);
-      });
-    }
+function finalizarSimulacro() {
+  clearInterval(intervalo);
+  document.getElementById("simulacro").classList.add("hidden");
+  document.getElementById("resultados").classList.remove("hidden");
+  mostrarResultados();
+}
 
-    function siguienteArea() {
-      const areaActual = areas[indiceArea].nombre;
-      const respuestasArea = [];
-      preguntasPorArea[areaActual].forEach((_, i) => {
-        const seleccion = document.querySelector(`input[name='preg${i}']:checked`);
-        respuestasArea.push(seleccion ? parseInt(seleccion.value) : null);
-      });
-      respuestas[areaActual] = respuestasArea;
+function mostrarResultados() {
+  const resumen = document.getElementById("resumen");
+  resumen.innerHTML = "";
+  let totalCorrectas = 0;
+  let totalPreguntas = 0;
+  for (const area in resultados) {
+    const correctas = resultados[area];
+    totalCorrectas += correctas;
+    totalPreguntas += 10;
+    const div = document.createElement("div");
+    div.classList.add("result");
+    div.innerHTML = `<strong>${area}:</strong> ${correctas}/10 correctas`;
+    resumen.appendChild(div);
+  }
+  const porcentaje = ((totalCorrectas / totalPreguntas) * 100).toFixed(2);
+  resumen.innerHTML += `<div class="result center"><strong>Total:</strong> ${totalCorrectas}/${totalPreguntas} — ${porcentaje}%</div>`;
+}
 
-      indiceArea++;
-      if (indiceArea < areas.length) {
-        mostrarPreguntas();
-      } else {
-        finalizarSimulacro();
-      }
-    }
-
-    function finalizarSimulacro() {
-      clearInterval(temporizador);
-      document.getElementById("area").classList.add("hidden");
-      document.getElementById("resultados").classList.remove("hidden");
-      document.getElementById("timer").classList.add("hidden");
-
-      let total = 0, correctas = 0;
-      let resumenHTML = `<h3>${nombreUsuario}</h3><p>Tiempo total: ${formatoTiempo(45*60 - tiempo)}</p><hr>`;
-
-      for (const area in preguntasPorArea) {
-        let correctasArea = 0;
-        resumenHTML += `<h4>${area}</h4>`;
-        preguntasPorArea[area].forEach((p, i) => {
-          const user = respuestas[area]?.[i];
-          const correcto = p.c;
-          const color = user === correcto ? "correct" : "incorrect";
-          if (user === correcto) correctasArea++;
-          resumenHTML += `<p class="${color}">${i+1}. ${p.q} — ${p.a[user] || "Sin respuesta"} (${user === correcto ? "✔" : "✖"})</p>`;
-        });
-        resumenHTML += `<strong>Puntaje en ${area}: ${correctasArea}/10</strong><hr>`;
-        correctas += correctasArea;
-        total += 10;
-      }
-
-      resumenHTML += `<h3>Total: ${correctas}/${total}</h3>`;
-      document.getElementById("resumen").innerHTML = resumenHTML;
-    }
-
-    function formatoTiempo(segundos) {
-      const min = Math.floor(segundos / 60);
-      const seg = segundos % 60;
-      return `${String(min).padStart(2, "0")}:${String(seg).padStart(2, "0")}`;
-    }
-
-    function exportarPDF() {
-      const doc = new jsPDF();
-      doc.setFont("helvetica", "bold");
-      doc.text("Simulacro ICFES — Resultados", 14, 16);
-      doc.setFont("helvetica", "normal");
-      doc.text(`Nombre: ${nombreUsuario}`, 14, 26);
-      doc.text(`Tiempo total: ${formatoTiempo(45*60 - tiempo)}`, 14, 34);
-
-      let y = 44;
-      for (const area in preguntasPorArea) {
-        doc.setFont("helvetica", "bold");
-        doc.text(area, 14, y);
-        y += 6;
-        doc.setFont("helvetica", "normal");
-        preguntasPorArea[area].forEach((p, i) => {
-          const user = respuestas[area]?.[i];
-          const correcto = p.c;
-          const text = `${i + 1}. ${p.q} — ${p.a[user] || "Sin respuesta"}`;
-          if (user === correcto) {
-            doc.setTextColor(0, 128, 0);
-          } else {
-            doc.setTextColor(255, 0, 0);
-          }
-          doc.text(text, 16, y);
-          y += 6;
-          if (y > 270) { doc.addPage(); y = 20; }
-        });
-        y += 8;
-      }
-
-      doc.setTextColor(0, 0, 0);
-      doc.save(`Simulacro_${nombreUsuario}.pdf`);
-    }
-  </script>
+function exportarPDF() {
+  const doc = new jsPDF();
+  const fecha = new Date().toLocaleString();
+  doc.setFontSize(18);
+  doc.text("Resultados del Simulacro ICFES", 20, 20);
+  doc.setFontSize(12);
+  doc.text(`Nombre: ${nombreEstudiante}`, 20, 30);
+  doc.text(`Fecha: ${fecha}`, 20, 37);
+  let y = 50;
+  for (const area in resultados) {
+    doc.text(`${area}: ${resultados[area]}/10 correctas`, 20, y);
+    y += 10;
+  }
+  const total = Object.values(resultados).reduce((a,b)=>a+b,0);
+  const porcentaje = ((total / 50) * 100).toFixed(2);
+  doc.text(`\nTotal: ${total}/50 — ${porcentaje}%`, 20, y+10);
+  doc.save(`Resultados_${nombreEstudiante}.pdf`);
+}
+</script>
 </body>
 </html>
-
